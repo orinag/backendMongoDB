@@ -4,15 +4,17 @@ const HttpError = require("../models/http-error");
 
 module.exports = (req, res, next) => {
   if (req.method === "OPTIONS") return next();
+
   try {
     const token = req.headers.authorization.split(" ")[1];
-
+    console.log(token);
     if (!token) {
       throw new Error("Authorization Failed!");
     }
 
     const decodedToken = jwt.verify(token, "s3cret");
     req.userData = { userId: decodedToken.userId };
+    console.log(req.userData);
     next();
   } catch (err) {
     console.log(err);

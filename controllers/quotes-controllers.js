@@ -2,7 +2,6 @@ const HttpError = require("../models/http-error");
 const Quote = require("../models/quote");
 const mongoose = require("mongoose");
 const User = require("../models/user");
-const { create } = require("../models/quote");
 
 const getQuotes = async (req, res, next) => {
   let allQuotes;
@@ -12,7 +11,7 @@ const getQuotes = async (req, res, next) => {
   } catch (err) {
     console.log(err.message);
     const error = new HttpError(
-      "Something went wrong, could not get all quotes",
+      "Something went wrong, could not get all quotes!",
       500
     );
     return next(error);
@@ -33,14 +32,14 @@ const getQuoteById = async (req, res, next) => {
     quote = await Quote.findById(quoteId);
   } catch (err) {
     const error = new HttpError(
-      "Something went wrong, could not get your quote",
+      "Something went wrong, could not get your quote.",
       500
     );
     return next(error);
   }
 
   if (!quote) {
-    const error = new HttpError("Could not find quote to provided id", 404);
+    const error = new HttpError("Could not find quote to provided id.", 404);
     return next(error);
   }
   res.json({ quote });
@@ -69,7 +68,7 @@ const deleteQuote = async (req, res, next) => {
 
   if (currentQuote.creator.id !== req.userData.userId) {
     const error = new HttpError(
-      "You are not allowed to delete this place!",
+      "You are not allowed to delete this quote!",
       403
     );
     return next(error);
