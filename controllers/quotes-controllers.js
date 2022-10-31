@@ -94,8 +94,12 @@ const addQuote = async (req, res, next) => {
   try {
     user = await User.findById(req.userData.userId);
   } catch (err) {
-    const error = new HttpError("Creating quote failed! Please try again ");
     console.log(err);
+    const error = new HttpError(
+      "Creating quote failed! Please try again ",
+      500
+    );
+
     return next(error);
   }
   createdQuote = new Quote({
@@ -113,8 +117,12 @@ const addQuote = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
-    const error = new HttpError("Creating quote failed! Please try again ");
     console.log(err);
+    const error = new HttpError(
+      "Creating quote failed! Please try again ",
+      500
+    );
+
     return next(error);
   }
 

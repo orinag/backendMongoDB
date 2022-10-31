@@ -29,10 +29,9 @@ const getUsers = async (req, res, next) => {
 
 const getUserById = (req, res, next) => {
   const qid = req.params.quoteId;
-  console.log("Hello");
+
   User.findAll({ where: { quoteId: qid } })
     .then((user) => {
-      console.log(user);
       res.json(user);
     })
     .catch((err) => {
@@ -43,10 +42,6 @@ const getQuotesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
   let currentUser;
   let userQuotes;
-  console.log("###");
-
-  console.log(req.params);
-  console.log("###");
 
   try {
     userQuotes = await Quote.find({ creator: userId });
@@ -58,7 +53,7 @@ const getQuotesByUserId = async (req, res, next) => {
     console.log(err);
     return next(error);
   }
-  console.log(userQuotes);
+
   if (!userQuotes) {
     const error = new HttpError(
       "Can't found user with this ID  ! Please try again ",
@@ -148,7 +143,6 @@ const deleteUser = async (req, res, next) => {
   const username = currentUser.username;
 
   if (userId !== req.userData.userId) {
-    console.log(currentUser._id);
     const error = new HttpError(
       "You are not allowed to delete this user!",
       403
@@ -171,8 +165,6 @@ const deleteUser = async (req, res, next) => {
       const sess = await mongoose.startSession();
       sess.startTransaction();
       for (let i = 0; i < userQuotes.length; i++) {
-        console.log(i);
-        console.log(userQuotes[i]);
         await userQuotes[i].remove({ session: sess });
       }
       await currentUser.remove({ session: sess });
@@ -203,7 +195,9 @@ const deleteUser = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+
   let currentUser;
+
   try {
     currentUser = await User.findOne({ email: email });
   } catch (err) {
