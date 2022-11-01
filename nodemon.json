@@ -1,0 +1,8 @@
+{
+    "env":{
+        "DB_USER":"orinagar",
+        "DB_PASSWORD": "sHK2xfETw0icsRQb",
+        "DB_NAME":"",
+        "JWT_KEY": "s3cret"
+    }
+}

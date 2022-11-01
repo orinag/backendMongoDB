@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
       throw new Error("Authorization Failed!");
     }
 
-    const decodedToken = jwt.verify(token, "s3cret");
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY);
     req.userData = { userId: decodedToken.userId };
     console.log(req.userData);
     next();
