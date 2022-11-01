@@ -106,7 +106,7 @@ const signUp = async (req, res, next) => {
 
   const token = jwt.sign(
     { userId: createdUser.id, email: createdUser.email },
-    "s3cret",
+    process.env.JWT_KEY,
     { expiresIn: "1h" }
   );
 
@@ -219,7 +219,7 @@ const login = async (req, res, next) => {
       email: currentUser.email,
       username: currentUser.username,
     },
-    "s3cret",
+    process.env.JWT_KEY,
     {
       expiresIn: "1h",
     }
