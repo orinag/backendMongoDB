@@ -85,6 +85,7 @@ const signUp = async (req, res, next) => {
     return next(error);
   }
   let hashedPassword;
+  console.log(password);
 
   try {
     hashedPassword = await bcrypt.hash(password, 12);
@@ -195,13 +196,26 @@ const deleteUser = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(password);
 
   let currentUser;
+  let unHashPass;
+
+  try {
+    unHashPass = await bcrypt.getSalt(
+      "$2a$12$9ZkZXw2yuOa4cTKcUhN0YOiTBXgXmLgtDDNj0Mom18FmHYVZtu0MC"
+    );
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+  console.log(unHashPass);
 
   try {
     currentUser = await User.findOne({ email: email });
   } catch (err) {
     const error = new HttpError("Failed to log in , please try again", 500);
+    console.log(err);
     return next(error);
   }
 
@@ -213,6 +227,23 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
+  let isValidPass = false;
+  try {
+    isValidPass = await bcrypt.compare(password, currentUser.password);
+  } catch (err) {
+    const error = new HttpError("Failed to log in , please try again", 500);
+    console.log(err);
+    return next(error);
+  }
+
+  if (!isValidPass) {
+    const error = new HttpError(
+      "Invalid credentials, could not log you in.",
+      401
+    );
+
+    return next(error);
+  }
   let token = jwt.sign(
     {
       userId: currentUser.id,

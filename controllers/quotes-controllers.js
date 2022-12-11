@@ -51,9 +51,9 @@ const deleteQuote = async (req, res, next) => {
 
   let currentQuote;
   try {
-    console.log(quoteId);
+    quoteId;
     currentQuote = await Quote.findById(quoteId).populate("creator");
-    console.log(currentQuote);
+    currentQuote;
   } catch (err) {
     const error = new HttpError(
       "Could not delete your quote, please try again later.",
@@ -129,7 +129,36 @@ const addQuote = async (req, res, next) => {
   res.status(201).json({ quote: createdQuote });
 };
 
+const editQuote = async (req, res, next) => {
+  const { author, content } = req.body;
+  const quoteId = req.params.qid;
+
+  let quote;
+
+  try {
+    quote = await Quote.findById(quoteId);
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError("Editing quote failed! Please try again ", 500);
+
+    return next(error);
+  }
+  quote.author = author;
+  quote.content = content;
+  try {
+    await quote.save();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError("Editing quote failed! Please try again ", 500);
+
+    return next(error);
+  }
+
+  res.status(201).json({ quote: quote.toObject({ getters: true }) });
+};
+
 module.exports.getQuotes = getQuotes;
 module.exports.getQuoteById = getQuoteById;
 module.exports.addQuote = addQuote;
+module.exports.editQuote = editQuote;
 module.exports.deleteQuote = deleteQuote;
