@@ -16,6 +16,7 @@ const getQuotes = async (req, res, next) => {
     );
     return next(error);
   }
+  
 
   res.json({
     quotes: allQuotes.map((quote) => {
@@ -126,7 +127,7 @@ const addQuote = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ quote: createdQuote });
+  res.status(201).json({ newQuote: createdQuote });
 };
 
 const editQuote = async (req, res, next) => {

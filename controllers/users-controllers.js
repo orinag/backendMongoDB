@@ -85,7 +85,6 @@ const signUp = async (req, res, next) => {
     return next(error);
   }
   let hashedPassword;
-  console.log(password);
 
   try {
     hashedPassword = await bcrypt.hash(password, 12);
@@ -196,7 +195,6 @@ const deleteUser = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(password);
 
   let currentUser;
   let unHashPass;
@@ -209,7 +207,6 @@ const login = async (req, res, next) => {
     console.log(err);
     return next(err);
   }
-  console.log(unHashPass);
 
   try {
     currentUser = await User.findOne({ email: email });
